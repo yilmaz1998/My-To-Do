@@ -23,10 +23,10 @@ const NewTodo = () => {
   
   return (
     <div className='text-center'>
-    <h1 className='text-3xl mt-12'>My To-Do List</h1>
+    <h1 className='text-5xl mt-12'>My To-Do List</h1>
     <form className='mt-6' onSubmit={handleSubmit}>
-      <input type='text' value={description} onChange={(e) => setDescription(e.target.value)}/>
-      <button>Add</button>
+      <input type='text' className="input form-control" value={description} onChange={(e) => setDescription(e.target.value)}/>
+      <button class="btn btn-primary">Add</button>
     </form>
     </div>
   )
