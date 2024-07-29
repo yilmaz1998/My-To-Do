@@ -1,13 +1,18 @@
 import React from "react"
+import { Routes, Route } from "react-router-dom"
 
 import NewTodo from "./components/NewTodo"
-import ShowTodo from "./components/ShowTodo"
+import LoginPage from "./components/LoginPage"
+import SignupPage from "./components/SignupPage"
 
 function App() {
   return (
     <div>
-      <NewTodo/>
-      <ShowTodo/>
+      <Routes>
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<NewTodo />} />
+    </Routes>
     </div>
   )
 }

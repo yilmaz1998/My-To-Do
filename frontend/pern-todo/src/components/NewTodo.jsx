@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ShowTodo from './ShowTodo'
 
 const NewTodo = () => {
 
@@ -28,6 +29,7 @@ const NewTodo = () => {
       <input type='text' className="input form-control" value={description} onChange={(e) => setDescription(e.target.value)}/>
       <button class="btn btn-primary">Add</button>
     </form>
+    <ShowTodo />
     </div>
   )
 }
