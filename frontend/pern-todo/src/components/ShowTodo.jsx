@@ -6,7 +6,12 @@ const ShowTodo = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch('http://localhost:3000/todo')
+      const response = await fetch('http://localhost:3000/todo', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem("token")
+        }
+      })
       const data = await response.json()
 
       setTodos(data)
@@ -18,7 +23,13 @@ const ShowTodo = () => {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3000/todo/${id}`, { method: 'DELETE' })
+      await fetch(`http://localhost:3000/todo/${id}`, {
+         method: 'DELETE',
+         headers: {
+          'Content-Type': 'application/json',
+          Authorization: localStorage.getItem("token")
+        },
+     })
       setTodos(todos.filter(todo => todo.id !== id))
     } catch (err) {
       console.error(err.message);
