@@ -4,6 +4,7 @@ const cors = require('cors')
 const pool = require("./database")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+require('dotenv').config()
 
 //middleware
 app.use(cors())
@@ -41,8 +42,9 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ msg: "Wrong Password"})
         }
 
-        const token = jwt.sign({ user_id: user.rows[0].id }, "jwtSecret", {expiresIn: "1h"})
-        res.json({ token })
+        const userId = user.rows[0].id
+        const token = jwt.sign({ user_id: userId, username: user.rows[0].username }, process.env.JWT_SECRET, {expiresIn: "1h"})
+        res.json({ token, username })
 
     } catch (err) {
         console.error(err.message)
@@ -51,12 +53,18 @@ app.post('/login', async (req, res) => {
 
 //middleware for auth
 const authenticate = (req, res, next) => {
-    const token = req.header("token")
-    if (!token) {
-        return res.status(401).json({ msg: "A token is required."})
-    }
+    const authHeader = req.headers.authorization 
+
+
+  if (!authHeader) {
+    console.log("No token found in the auth header:", authHeader)
+    return res.status(401).json({ message: "A token is required." })
+  }
+
+    const token = authHeader
+
     try {
-        const decoded = jwt.verify(token, "jwtSecret")
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decoded
         next()
 
@@ -67,12 +75,12 @@ const authenticate = (req, res, next) => {
 
 
 //create todo
-app.post('/todo',  async (req, res) => {
+app.post('/todo', authenticate, async (req, res) => {
     try {
         const { description } = req.body
         const newTodo = await pool.query(
-            "INSERT INTO todo (description) VALUES($1) RETURNING *", 
-            [description]
+            "INSERT INTO todo (description, user_id) VALUES($1, $2) RETURNING *", 
+            [description, req.user.user_id]
             );
 
             res.json(newTodo.rows[0])
@@ -84,9 +92,9 @@ app.post('/todo',  async (req, res) => {
 
 
 //get all todos
-app.get('/todo', async (req, res) => {
+app.get('/todo', authenticate, async (req, res) => {
     try {
-        const allTodos = await pool.query("SELECT * FROM todo")
+        const allTodos = await pool.query("SELECT * FROM todo WHERE user_id = $1", [req.user.user_id])
         res.json(allTodos.rows)
     } catch (err) {
         console.error(err.message)
@@ -95,11 +103,11 @@ app.get('/todo', async (req, res) => {
 
 
 //get a todo
-app.get('/todo/:id', async (req, res) => {
+app.get('/todo/:id', authenticate, async (req, res) => {
     try {
         const { id } = req.params
         const { description } = req.body
-        const todo = await pool.query("SELECT * FROM todo WHERE id=$1", [id])
+        const todo = await pool.query("SELECT * FROM todo WHERE id=$1 AND user_id = $2", [id, req.user.user_id])
         res.json(todo.rows)
     } catch (err) {
         console.error(err.message)
@@ -107,11 +115,11 @@ app.get('/todo/:id', async (req, res) => {
 })
 
 //update a todo
-app.put('/todo/:id', async (req, res) => {
+app.put('/todo/:id', authenticate, async (req, res) => {
     try {
         const { id } = req.params
         const { description } = req.body
-        const updatedTodo = await pool.query("UPDATE todo SET description =$1 WHERE id =$2", [description, id])
+        const updatedTodo = await pool.query("UPDATE todo SET description = $1 WHERE id = $2 AND user_id = $3 RETURNING *", [description, id, req.user.user_id])
         res.json("To-do has been updated.")
     } catch (err) {
         console.error(err.message)
@@ -120,10 +128,10 @@ app.put('/todo/:id', async (req, res) => {
 
 
 //delete a todo
-app.delete('/todo/:id', async (req, res) => {
+app.delete('/todo/:id', authenticate, async (req, res) => {
     try {
         const { id } = req.params
-        const deletedTodo = await pool.query("DELETE FROM todo WHERE id=$1", [id])
+        const deletedTodo = await pool.query("DELETE FROM todo WHERE id = $1 AND user_id = $2 RETURNING *", [id, req.user.user_id])
         res.json("To-do has been deleted.")        
     } catch (err) {
         console.error(err.message)

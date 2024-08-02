@@ -2,7 +2,8 @@ CREATE DATABASE perntodo;
 
 CREATE TABLE todo(
     id SERIAL PRIMARY KEY,
-    description  VARCHAR(300)
+    description  VARCHAR(300) NOT NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE users(
