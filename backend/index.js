@@ -5,10 +5,12 @@ const pool = require("./database")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
+const PORT = process.env.PORT || 3000
 
 //middleware
 app.use(cors())
 app.use(express.json())
+
 
 
 //signup
@@ -139,6 +141,6 @@ app.delete('/todo/:id', authenticate, async (req, res) => {
 })
 
 
-app.listen(3000, () => {
-    console.log("Server in on 3000")
+app.listen(PORT, () => {
+    console.log(`Server in on ${PORT}`)
 })
