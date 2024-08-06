@@ -32,21 +32,14 @@ const NewTodo = () => {
       body: JSON.stringify({description})
     })
 
-    window.location = "/"
+    window.location = "/todo"
   } catch (err) {
     console.error(err.message)
   }
   }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login')
-    console.log('Logged out')
-  }
   
   return (
     <div className='text-center'>
-      <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Logout</button>
       {token ? (
         <h1 className='mt-2 text-2xl'>Welcome, <span className='text-blue-500'>{username}</span></h1>
       ) : null}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 const SignupPage = () => {
   const [username, setUsername] = useState('')
@@ -27,9 +28,14 @@ const SignupPage = () => {
   }
   
   return (
-    <div className='text-center mx-auto p-32'>
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+    className='text-center mt-48'
+    >
       <h1 className='text-4xl mb-4'>Sign Up Page</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="mx-auto max-w-lg">
       <div className="form-floating mb-3">
         <input type="text" className="form-control" id="floatingInput" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
         <label htmlFor="floatingInput">Username</label>
@@ -42,7 +48,7 @@ const SignupPage = () => {
        </form>
        <p className='mt-4'>If you have an account, go to log in page from the link below.</p>
        <Link class="btn btn-outline-secondary mt-2" to='/login'>Log In Page</Link>
-    </div>
+    </motion.div>
   )
 }
 

@@ -43,16 +43,18 @@ const ShowTodo = () => {
 
   return (
     <div className='text-center'>
-    {todos.map((todo) => (
-      <div key={todo.id}> 
-      <div className='d-flex justify-content-center mt-2'>
-        <p className='text-3xl'>{todo.description}</p> 
-        <EditTodo todo={todo} fetchTodos={fetchTodos}/>
-        <button className='btn btn-danger' onClick={() => handleDelete(todo.id)}>Delete</button>
+      {todos.map((todo) => (
+        <div key={todo.id} className='mt-3'>
+          <div className='flex flex-col items-center mx-4'>
+            <p className='text-3xl break-words overflow-hidden w-full max-w-xs sm:max-w-sm md:max-w-md'>{todo.description}</p>
+            <div className='flex space-x-2 mt-2'>
+              <EditTodo todo={todo} fetchTodos={fetchTodos}/>
+              <button className='btn btn-danger' onClick={() => handleDelete(todo.id)}>Delete</button>
+            </div>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
+      ))}
+    </div>
   )
 }
 

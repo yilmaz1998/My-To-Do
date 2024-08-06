@@ -16,7 +16,7 @@ const EditTodo = ({ todo }) => {
         body: JSON.stringify(body)
       })
       
-      window.location = "/"
+      window.location = "/todo"
     } catch (error) {
       console.error(error.meesage)
     }
