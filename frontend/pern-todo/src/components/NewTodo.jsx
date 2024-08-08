@@ -41,7 +41,7 @@ const NewTodo = () => {
   return (
     <div className='text-center'>
       {token ? (
-        <h1 className='mt-2 text-2xl'>Welcome, <span className='text-blue-500'>{username}</span></h1>
+        <h1 className='mt-2 text-2xl'>Welcome, <span className='text-red-500'>{username}</span></h1>
       ) : null}
     <h1 className='text-5xl mt-12'>My To-Do List</h1>
     <form className='mt-6' onSubmit={handleSubmit}>
